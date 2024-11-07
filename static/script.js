@@ -88,6 +88,23 @@ const fetchPutTask = async (id, name, description) => {
   }
 }
 
+const fetchDeleteTask = async (id) => {
+  try {
+    const response = await fetch(`${API_LINK}/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id }),
+    })
+    const result = await response.json()
+
+    if (response.ok) alert('Task deleted successfully!')
+  } catch (err) {
+    console.error('Error deleting task:', err)
+  }
+}
+
 document.addEventListener('DOMContentLoaded', fetchTasks)
 document
   .getElementById('specificTaskForm')
@@ -125,3 +142,15 @@ document.getElementById('taskEditForm').addEventListener('submit', (event) => {
     alert('Input id, name and description!')
   }
 })
+document
+  .getElementById('removeTaskForm')
+  .addEventListener('submit', (event) => {
+    event.preventDefault()
+
+    const id = document.getElementById('removeId').value
+    if (id) {
+      fetchDeleteTask(id)
+    } else {
+      alert('Input id!')
+    }
+  })
