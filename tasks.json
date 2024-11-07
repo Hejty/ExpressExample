@@ -11,12 +11,6 @@
       "name": "Test Mat",
       "description": "AP, GP, NGR, FinMat",
       "done": false
-    },
-    {
-      "id": 3,
-      "name": "Task test edit name",
-      "description": "Description for Task test edit description",
-      "done": false
     }
   ]
 }

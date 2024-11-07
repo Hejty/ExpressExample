@@ -2,6 +2,7 @@ import express = require('express')
 import { Application, Request, Response } from 'express'
 import 'dotenv/config'
 import { writeFile } from 'fs'
+import { error } from 'console'
 
 const app: Application = express()
 const port = process.env.PORT
@@ -29,8 +30,7 @@ async function readFile(id?: string) {
 
 async function editFile(name: string, description: string, id?: string) {
   try {
-    const data = await readFile()
-    const tasks = data
+    const tasks = await readFile()
     if (id) {
       //Edit task
       const taskId = parseInt(id)
@@ -55,6 +55,22 @@ async function editFile(name: string, description: string, id?: string) {
     return
   } catch (err) {
     console.error('Error editing file', err)
+    throw err
+  }
+}
+
+async function deleteTask(id: string) {
+  try {
+    const tasks = await readFile()
+    const taskId = parseInt(id)
+    const taskIndex = tasks.findIndex((task: any) => task.id === taskId)
+    if (taskIndex === -1) return false
+    tasks.splice(taskIndex, 1)
+
+    await fs.writeFile(path, JSON.stringify({ data: tasks }, null, 2))
+    return true
+  } catch (err) {
+    console.error('Error reading file', err)
     throw err
   }
 }
@@ -122,6 +138,20 @@ app.put('/task/:id', async (req: Request, res: Response) => {
     }
   } catch (err) {
     res.status(500).json({ message: 'Error editing task.' })
+  }
+})
+
+app.delete('/task/:id', async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id
+    const response = await deleteTask(id)
+    if (!response) {
+      res.status(404).json({ error: 'Task not found.' })
+    } else {
+      res.status(200).json({ message: 'Succesfully deleted task.' })
+    }
+  } catch (err) {
+    res.status(500).json({ message: 'Error deleting task.' })
   }
 })
 
