@@ -27,18 +27,31 @@ async function readFile(id?: string) {
   }
 }
 
-async function editFile(name: string, description: string) {
+async function editFile(name: string, description: string, id?: string) {
   try {
     const data = await readFile()
+    const tasks = data
+    if (id) {
+      //Edit task
+      const taskId = parseInt(id)
+      const task = tasks.find((t: any) => t.id === taskId)
+      if (!task) return null
+      if (name) task.name = name
+      if (description) task.description = description
+
+      await fs.writeFile(path, JSON.stringify({ data: tasks }, null, 2))
+      return
+    }
+
     const newTask = {
-      id: data.length > 0 ? data[data.length - 1].id + 1 : 1,
+      id: tasks.length > 0 ? tasks[tasks.length - 1].id + 1 : 1,
       name: name,
       description: description,
       done: false,
     }
-    data.push(newTask)
+    tasks.push(newTask)
 
-    await fs.writeFile(path, JSON.stringify({ data: data }, null, 2))
+    await fs.writeFile(path, JSON.stringify({ data: tasks }, null, 2))
     return
   } catch (err) {
     console.error('Error editing file', err)
@@ -69,7 +82,7 @@ app.get('/task/:id', async (req: Request, res: Response) => {
     const data = await readFile(id)
 
     if (!data) {
-      res.status(404).json({ message: 'Task not found.' })
+      res.status(404).json({ error: 'Task not found.' })
     } else {
       res.status(200).json(data)
     }
@@ -86,10 +99,29 @@ app.post('/task', async (req: Request, res: Response) => {
       res.status(400).json({ error: 'Name and description are required.' })
     } else {
       await editFile(name, description)
-      res.status(201).json({ message: 'Succesfully posted.' })
+      res.status(201).json({ message: 'Succesfully posted task.' })
     }
   } catch (err) {
     res.status(500).json({ message: 'Error posting task.' })
+  }
+})
+
+// Edits a task
+app.put('/task/:id', async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id
+    const { name, description } = req.body
+
+    if (!name && !description) {
+      res
+        .status(400)
+        .json({ error: 'At least name or description must be provided.' })
+    } else {
+      await editFile(name, description, id)
+      res.status(200).json({ message: 'Succesfully edited task.' })
+    }
+  } catch (err) {
+    res.status(500).json({ message: 'Error editing task.' })
   }
 })
 
