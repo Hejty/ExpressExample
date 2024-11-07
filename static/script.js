@@ -71,6 +71,23 @@ const fetchPostTask = async (name, description) => {
   }
 }
 
+const fetchPutTask = async (id, name, description) => {
+  try {
+    const response = await fetch(`${API_LINK}/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id, name, description }),
+    })
+    const result = await response.json()
+
+    if (response.ok) alert('Task edited successfully!')
+  } catch (err) {
+    console.error('Error editing task:', err)
+  }
+}
+
 document.addEventListener('DOMContentLoaded', fetchTasks)
 document
   .getElementById('specificTaskForm')
@@ -94,5 +111,17 @@ document.getElementById('taskAddForm').addEventListener('submit', (event) => {
     fetchPostTask(name, description)
   } else {
     alert('Input name and description!')
+  }
+})
+document.getElementById('taskEditForm').addEventListener('submit', (event) => {
+  event.preventDefault()
+
+  const id = document.getElementById('editId').value
+  const name = document.getElementById('editName').value
+  const description = document.getElementById('editDescription').value
+  if (id && name && description) {
+    fetchPutTask(id, name, description)
+  } else {
+    alert('Input id, name and description!')
   }
 })
