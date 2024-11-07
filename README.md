@@ -21,3 +21,9 @@ Make sure to install dependencies:
 ```GIT
 npm install
 ```
+
+To compile, use:
+
+```GIT
+npx ts-node src/index.ts
+```
