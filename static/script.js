@@ -54,6 +54,23 @@ const fetchSpecificTask = async (id) => {
   }
 }
 
+const fetchPostTask = async (name, description) => {
+  try {
+    const response = await fetch(API_LINK, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name, description }),
+    })
+    const result = await response.json()
+
+    if (response.ok) alert('Task added successfully!')
+  } catch (err) {
+    console.error('Error posting task:', err)
+  }
+}
+
 document.addEventListener('DOMContentLoaded', fetchTasks)
 document
   .getElementById('specificTaskForm')
@@ -68,3 +85,14 @@ document
         'Please enter a valid task ID.'
     }
   })
+document.getElementById('taskAddForm').addEventListener('submit', (event) => {
+  event.preventDefault()
+
+  const name = document.getElementById('name').value
+  const description = document.getElementById('description').value
+  if (name && description) {
+    fetchPostTask(name, description)
+  } else {
+    alert('Input name and description!')
+  }
+})
