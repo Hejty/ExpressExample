@@ -1,11 +1,11 @@
 import express = require('express')
 import { Application, Request, Response } from 'express'
 import 'dotenv/config'
-import { writeFile } from 'fs'
-import { error } from 'console'
+import cors from 'cors'
 
 const app: Application = express()
-const port = process.env.PORT
+app.use(cors())
+const PORT = process.env.PORT
 const fs = require('fs/promises')
 const path = './tasks.json'
 
@@ -155,6 +155,6 @@ app.delete('/task/:id', async (req: Request, res: Response) => {
   }
 })
 
-app.listen(port, () => {
-  console.log(`Server started on port ${port}!`)
+app.listen(PORT, () => {
+  console.log(`Server started on port ${PORT}!`)
 })
