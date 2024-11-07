@@ -1,0 +1,19 @@
+{
+  "name": "expressexample",
+  "version": "1.0.0",
+  "description": "To use this project, use npm -i",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ExpressExample"
+  },
+  "author": "Hejty",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^22.9.0",
+    "typescript": "^5.6.3"
+  }
+}
