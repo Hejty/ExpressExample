@@ -1,5 +1,7 @@
 # Express API + frontend example
 
+Make an application that will load tasks.json
+
 Create a simple API:
 
 ```
@@ -9,6 +11,8 @@ POST /task
 PUT /task/:id
 DELETE /task/:id
 ```
+
+Make a frontend for it
 
 ## Setup
 
